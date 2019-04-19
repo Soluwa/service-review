@@ -1,0 +1,15 @@
+{
+  "extends": [
+    "airbnb-base",
+    "prettier"
+  ],
+  "env": {
+    "jest": true,
+    "node": true
+  },
+  "rules": {
+    "jsx-a11y/href-no-hash": "off",
+    "no-underscore-dangle": ["error", { "allow": ["_id", "_rev"] }],
+    "import/prefer-default-export": "off"
+  }
+}

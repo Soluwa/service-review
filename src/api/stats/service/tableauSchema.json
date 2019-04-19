@@ -1,0 +1,25 @@
+{
+  "default": [
+    { "fields": ["ConEnd"], "response": "Abandoned" },
+    { "fields": ["Triggered_Res_Flow", "ConEnd"], "response": "Assumed Containment" },
+    { "fields": ["Triggered_Res_Flow", "End_Suc"], "response": "Full Containment" },
+    { "fields": ["HO_By_Design"], "response": "Hand off by Design" },
+    { "fields": ["ho_c2c"], "response": "Click to Call" },
+    { "fields": ["HO_Agt_Swear"],  "response": "Swear" },
+    { "fields": ["HO_Agt_Safe"],  "response": "Safe word" },
+    { "fields": ["HO_Not_Resolved", "HO_Accepted"],  "response": "Resolution Rejected Handoff Accepted" },
+    { "fields": ["HO_Not_Resolved", "HO_Rejected"], "response": "Resolution Rejected Handoff Declined" },
+    { "fields": ["HO_Something_Else", "HO_Accepted"], "response": "Handoff Something Else Accepted" },
+    { "fields": ["HO_Something_Else", "HO_Rejected"], "response": "Handoff Something Else Declined" },
+    { "fields": ["HO_Security", "HO_Accepted"], "response": "Handoff Security Accepted" },
+    { "fields": ["HO_Security", "HO_Rejected"], "response": "Handoff Security Declined" },
+    { "fields": ["HO_Not_Understood", "HO_Accepted"], "response": "Handoff Not Understood Accepted" },
+    { "fields": ["HO_Not_Understood", "HO_Rejected"], "response": "Handoff Not Understood Declined" },
+    { "fields": ["HO_Not_Understood", "HO_Rejected_"], "response": "Handoff Not Understood Declined"  },
+    { "fields": ["HO_Failed_Twice", "HO_Accepted"], "response": "Handoff Failed Twice Accepted" },
+    { "fields": ["HO_Failed_Twice", "HO_Rejected"], "response": "Handoff Failed Twice Declined" },
+    { "fields": ["HO_Agt_MOT"], "response": "Handoff MoT" },
+    { "fields": ["HO_Agt_End"], "response": "Handoff Correct Treatment" },
+    { "fields": ["Complain"], "response": "Complain" }
+  ]
+}

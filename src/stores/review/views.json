@@ -1,0 +1,12 @@
+{
+  "_id": "_design/reviews",
+  "_rev": "2-cfa3b575da9afb86495edc6b39c64594",
+  "views": {
+    "batch": {
+      "map": " function (doc) {\n   if (doc.type == 'batch') {\n    emit(doc._id, doc);\n   }\n}"
+    },
+    "tableauByConvId": {
+      "map": " function (doc) {\n   if (doc.type == 'review') {\n    var output = JSON.parse(JSON.stringify(doc));\n    delete output.areaForImprovement;\n    delete output.statusCode;\n    delete output.tags;\n    delete output._rev;\n    delete output.type;\n    \n    for (var i = 0; i < doc.areaForImprovement.length; i += 1) {\n      output[doc.areaForImprovement[i] + 'AreaForImprovement'] = \"1\";\n    }\n\n    emit(doc.convId, output);\n   }\n}"
+    }
+  }
+}

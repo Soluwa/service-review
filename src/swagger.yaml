@@ -1,0 +1,573 @@
+swagger: '2.0'
+basePath: '/'
+schemes:
+  - https
+  - http
+info:
+  version: 1.2.0
+  title: sc-caf-service-context
+  description: 'State Store for CAF conversations. Elementary data consists of "turns", which constitute the result of a single cognitive model processing a user utterance.'
+security:
+  - apiName: []
+  - apiSecret: []
+securityDefinitions:
+  apiName:
+    name: x-caf-api-key
+    type: apiKey
+    description: Username to authenticate with service.
+    in: header
+  apiSecret:
+    name: x-caf-api-secret
+    type: apiKey
+    description: password to authenticate with service.
+    in: header
+paths:
+  /turn:
+    get:
+      tags:
+        - Context
+      description: Gets all turns.
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: array
+            items:
+            - $ref: '#/definitions/turn'
+        '401':
+          description: Unauthorised - review api key and secret.
+    post:
+      tags:
+        - Context
+      description: Create new turn
+      parameters: 
+      - in: body
+        name: body
+        schema:
+          $ref: '#/definitions/turn'
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/turn'
+        '401':
+          description: Unauthorised - review api key and secret.
+    put:
+      tags:
+        - Context
+      description: Creat new turn
+      parameters: 
+      - in: body
+        name: body
+        schema:
+            $ref: '#/definitions/turn'
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/turn'
+        '401':
+          description: Unauthorised - review api key and secret.
+    patch:
+      tags:
+        - Context
+      description: Creat new turn
+      parameters: 
+      - in: body
+        name: body
+        schema:
+            $ref: '#/definitions/turn'
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/turn'
+        '401':
+          description: Unauthorised - review api key and secret.
+  /turn/{turnId}:
+    parameters: 
+    - in: path
+      required: true
+      name: turnId
+      type: string
+    get:
+      tags:
+        - Context
+      description: Gets all turns.
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: array
+            items:
+            - $ref: '#/definitions/turn'
+        '401':
+          description: Unauthorised - review api key and secret.
+
+  /conversation:
+    get:
+      tags:
+        - Context
+      description: Gets collated batch records - returns metadata about the batch and list of turns sorted by most recent first.
+      parameters: 
+      - in: query
+        name: start
+        type: string
+        description: DateTime to start from.
+      - in: query
+        name: end
+        type: string
+        description: DateTime to end from.
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: array
+            items:
+            - $ref: '#/definitions/batch'
+        '401':
+          description: Unauthorised - review api key and secret.
+  /conversation/{convId}:
+    parameters: 
+    - in: path
+      name: convId
+      required: true
+      type: string
+      description: Conversation Id of target batch.
+    get:
+      tags:
+       - Context
+      description: Gets collated batch record by batch Id - returns metadata about the batch and list of turns sorted by most recent first.
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/batch'
+        '401':
+          description: Unauthorised - review api key and secret.
+  /conversation/{convId}/transcript:
+    parameters: 
+    - in: path
+      name: convId
+      required: true
+      type: string
+      description: Conversation Id of target batch.
+    get:
+      tags:
+        - Context
+      description: Gets collated batch record by batch Id - returns human-readable transcript of utterances.
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: array
+            items:
+            - $ref: '#/definitions/transcriptItem'
+        '401':
+          description: Unauthorised - review api key and secret.
+  /conversation/expired:
+    parameters: 
+    - in: query
+      name: ageHours
+      type: string
+      description: How old a batch should be idle to be considered 'expired'
+    - in: query
+      name: windowHours
+      type: string
+      description: Length of window to check for expired conversations
+    - in: query
+      name: bookmark
+      type: string
+      description: Bookmark provide by previous request, for pagination
+    get:
+      tags:
+        - Context
+      description: Gets convIds of conversations that have seen no activity in $ageHours hours
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: object
+            properties:
+              convIds:
+                type: array
+                items:
+                  $ref: '#/definitions/convId'
+        '401':
+          description: Unauthorised - review api key and secret.
+definitions:
+  configId:
+    description: 'a global product release identifier (e.g. ibreg@1.4.5), from which the entire state of cbaas config can be traced.'
+    type: string
+  turn:
+    type: object
+    required:
+      - turnId
+      - turnStart
+      - configId
+    additionalProperties: false
+    properties:
+      turnId:
+        type: string
+      convId:
+        type: string
+      configId:
+        description: 'In an architecture where each product has only one possible version per environment, this will be the Proudct ID. Otherwise it will need to be a stirng that uniquely identifies the business configuration used.'
+        type: string
+      brand:
+        type: string
+      channel:
+        type: string
+      turnStart:
+        type: string
+        format: date-time
+      turnEnd:
+        type: string
+        format: date-time
+      prevTurnId:
+        type: string
+      state:
+        $ref: '#/definitions/state'
+      question:
+        $ref: '#/definitions/communication'
+      reply:
+        $ref: '#/definitions/communication'
+      context:
+        $ref: '#/definitions/context'
+      path:
+        $ref: '#/definitions/path'
+      events:
+        $ref: '#/definitions/events'
+  state:
+    type: object
+    additionalProperties: false
+    properties:
+      closed:
+        description: 'batch is finished, was timed out'
+        type: boolean
+      status:
+        description: 'batch is finished, this is the closing turn'
+        type: string
+      selfCallCount:
+        description: 'used by the system to determine if an utterance can skip steps in cogcon flow, and to catch infinite loops'
+        type: integer
+      sysTurnCount:
+        description: 'tracking the number of system turns in the batch. Where there is a handoff between different system components, each component should be considered to be taking a turn - the batch is in a sense a multi-party batch'
+        type: integer
+      userTurnCount:
+        description: tracking the number of user turns in the batch. Should be updated whenever a new interaction from the user is considered.
+        type: integer
+      controllerStates:
+        type: array
+        items:
+          $ref: '#/definitions/controllerState'
+      rulesetStates:
+        type: array
+        items:
+          $ref: '#/definitions/rulesetState'
+  communication:
+    description: 'This could be either the CAF question, or the CAF reply, or any other piece of text stored in the CAF communcation format, which supports annotations'
+    type: object
+    properties:
+      utterances:
+        type: array
+        items:
+          $ref: '#/definitions/utterance'
+  context:
+    type: object
+    additionalProperties: false
+    properties:
+      conversationContext:
+        $ref: '#/definitions/conversationContext'
+      userData:
+        $ref: '#/definitions/userData'
+  path:
+    type: object
+    properties:
+      modelRef:
+        type: string
+      nodesVisited:
+        type: array
+        items:
+          type: string
+      nodeUid:
+        type: string
+      nodeHead:
+        type: string
+      nodeLname:
+        type: string
+      address:
+        type: string
+      triggers:
+        type: object
+        properties:
+          handoff:
+            type: object
+            additionalProperties: false
+            required:
+              - mode
+              - target
+            properties:
+              type:
+                type: string
+              mode:
+                type: string
+              target:
+                type: string
+              inputOverride:
+                type: string
+              resetThis:
+                type: boolean
+          reset:
+            type: object
+            required:
+              - target
+            additionalProperties: false
+            properties:
+              target:
+                type: string
+  events:
+    type: array
+    items:
+    - type: string
+  controllerState:
+    type: object
+    properties:
+      stepRef:
+        type: string
+      stepState:
+        type: object
+  rulesetState:
+    type: object
+    additionalProperties: false
+    required:
+      - modelRef
+    properties:
+      modelRef:
+        description: 'NEW for 2-0-0: used to be configId'
+        type: string
+      stateData:
+        type: object
+      configId:
+        description: DEPRECATED - changed to modelRef
+        type: string
+      convId:
+        description: DEPRECATED - moved inside stateData as ruleset-implementation-specific data item
+        type: string
+      rulesetContext:
+        description: DEPRECATED - moved inside stateData as ruleset-implementation-specific data item (this is e.g. watson system context)
+        type: object
+  utterance:
+    type: object
+    required:
+      - text
+    properties:
+      text: {}
+      purpose: {}
+      classifications:
+        type: array
+        items:
+          $ref: '#/definitions/classification'
+      entities:
+        type: array
+        items:
+          $ref: '#/definitions/entity'
+      concepts:
+        type: array
+        items:
+          $ref: '#/definitions/concept'
+  classification:
+    type: object
+    properties:
+      name:
+        type: string
+      value:
+        type: string
+      confidence: {}
+      derivedFrom: {}
+    required:
+      - name
+      - value
+  entity:
+    type: object
+    properties:
+      name:
+        type: string
+      value:
+        type: string
+      literals:
+        type: array
+        items:
+          type: string
+      locations:
+        type: array
+        items:
+          type: object
+          properties:
+            start:
+              type: integer
+            end:
+              type: integer
+      derivedFrom: {}
+    required:
+      - name
+      - value
+      - derivedFrom
+  concept:
+    type: object
+    properties:
+      name: {}
+      value: {}
+      derivedFrom: {}
+    required:
+      - name
+      - value
+      - derivedFrom
+  conversationContext:
+    type: object
+  userData:
+    type: object
+    additionalProperties: true
+    properties:
+      tokens:
+        type: array
+        items:
+          $ref: '#/definitions/tokendata'
+  tokendata:
+    type: object
+    additionalProperties: false
+    required:
+      - token
+      - type
+      - dataClassification
+      - name
+      - value
+      - hash
+      - locations
+      - derivedFrom
+    properties:
+      type:
+        type: string
+      dataClassification:
+        type: string
+      token:
+        type: string
+      name:
+        type: string
+      value:
+        type: string
+      hash:
+        type: string
+      locations:
+        type: object
+        additionalProperties: false
+        required:
+          - start
+          - end
+        properties:
+          start:
+            type: integer
+          end:
+            type: integer
+      derivedFrom:
+        type: string
+  facadeConfig:
+    type: object
+    additionalProperties: false
+    properties:
+      models:
+        type: array
+        items:
+          type: object
+          additionalProperties: false
+          properties:
+            modelRef:
+              type: string
+            modelId:
+              type: string
+  conversation:
+    type: object
+    properties:
+      convId:
+        $ref: '#/definitions/convId'
+      configId:
+        $ref: '#/definitions/configId'
+      brand:
+        $ref: '#/definitions/brand'
+      channel:
+        $ref: '#/definitions/channel'
+      firstTurn:
+        type: string
+        description: Timestamp of first turn start
+      lastTurn:
+        type: string
+        description: Timestamp of last turn start
+      lastTurnId:
+        type: string
+        description: TurnId of last turn
+      isFinished:
+        type: boolean
+        description: Conversation is closed
+      numTurns:
+        type: integer
+        description: Count of turns in batch.
+      turns:
+        type: array
+        items:
+        - $ref: '#/definitions/turn'
+  transcriptUtterance:
+    type: object
+    properties:
+      time:
+        type: string
+        description: Timestamp of utterance
+      text:
+        type: array
+        items:
+        - type: string
+        description: List of utterances
+  transcriptItem:
+    type: object
+    properties:
+      user:
+        $ref: '#/definitions/transcriptUtterance'
+      bot:
+        $ref: '#/definitions/transcriptUtterance'
+  turnCreate:
+    description: CAF_C_70_i01 State Store Create Turn Interface - Request (1-1-1)
+    type: object
+    additionalProperties: false
+    required:
+      - turnStart
+      - input
+    properties:
+      prevTurnId:
+        type: string
+      configId:
+        type: string
+      convId:
+        type: string
+      turnId:
+        type: string
+      brand:
+        type: string
+      channel:
+        type: string
+      context:
+        $ref: '#/definitions/context'
+      turnStart:
+        description: this should be the start time when the controller received the request
+        type: string
+        format: date-time
+      input:
+        type: array
+        items:
+          type: string
+      tokens:
+        type: array
+        items:
+          $ref: '#/definitions/tokendata'
+      path:
+        $ref: '#/definitions/path'
+      state:
+        $ref: '#/definitions/state'

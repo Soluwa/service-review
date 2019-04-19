@@ -1,0 +1,45 @@
+path: .
+name: sc-caf-service-review
+memory: 512M
+instances: 1
+org: POC21_CognitiveComputing
+domain: lbg.eu-gb.mybluemix.net
+env:
+  NODE_ENV: development
+  ALLOWED_KEYS: "[{\"key\":\"cbaas-review\",\"secret\":\"62eed7edd780281c\"}]"
+  API_KEY: "cbaas-review"
+  API_SECRET: "62eed7edd780281c"
+  REVIEW_DB_COLLECTION: "cbaas-review"
+  CONVERSATION_DB_COLLECTION: "cbaas-conversation"
+  DEFAULT_ENDPOINT: "Open"
+services:
+  - CBaaS-Log-Drain
+applications:
+  # CBAAS-DATA-REVIEW
+- name: sc-caf-service-review-cbaas-data-review
+  space: CBAAS-DATA-REVIEW
+  env:
+    DB_URL: "https://3c5ea03c-8eb2-458f-9ca0-d3c3b760159a-bluemix.cloudant.com"
+    DB_USER: "3c5ea03c-8eb2-458f-9ca0-d3c3b760159a-bluemix"
+    DB_PASSWORD: "599702fd7ed77bc96faef2bda6cd7f59883072a827dd31dfbee7205a79d478b5"
+    CBAAS_URL: "https://sc-caf-service-gateway-cbaas-data-review.lbg.eu-gb.mybluemix.net/api"
+  # CBAAS-DATA-REVIEW-UAT
+- name: sc-caf-service-review-cbaas-data-review-uat
+  space: CBAAS-DATA-REVIEW-UAT
+  env:
+    DB_URL: "https://3cd60f35-aa40-48ab-8b80-01cd6f95253c-bluemix.cloudant.com"
+    DB_USER: "3cd60f35-aa40-48ab-8b80-01cd6f95253c-bluemix"
+    DB_PASSWORD: "2ff1e86c25b0a6a1900825d6876326e0a3c57097c73eb0a230bb772c3fa19c86"
+    CBAAS_URL: "https://sc-caf-service-gateway-cbaas-data-review-uat.lbg.eu-gb.mybluemix.net/api"
+- name: sc-caf-service-review-pre-pilot
+  space: POC21_CognitiveReview
+  org: Pre-Pilot
+  env:
+    NODE_ENV: "production"
+    CBAAS_URL: "https://cbaas-review-pre-pilot.lbg.eu-gb.mybluemix.net/api"
+- name: sc-caf-service-review-pilot
+  space: POC21_CognitiveReview
+  org: Pilot
+  env:
+    NODE_ENV: "production"
+    CBAAS_URL: "https://cbaas-review-pilot.lbg.eu-gb.mybluemix.net/api"

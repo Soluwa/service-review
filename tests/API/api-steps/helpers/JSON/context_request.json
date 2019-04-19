@@ -1,0 +1,221 @@
+{
+    "convId": "test-1",
+    "turn": {
+    "state": {
+      "coordination": {
+        "picker": "stack",
+        "stack": [
+          [
+            "master",
+            "exception-handling"
+          ]
+        ],
+        "exceptionRef": "exception-handling",
+        "threshold": 0.8
+      },
+      "rulesetStates": [
+        {
+          "modelRef": "master",
+          "rulesetContext": {
+            "dialog_stack": [
+              {
+                "dialog_node": "root"
+              }
+            ],
+            "dialog_turn_counter": 1,
+            "dialog_request_counter": 1,
+            "_node_output_map": {
+              "Anything else": [
+                0,
+                0,
+                3,
+                2,
+                1
+              ]
+            },
+            "branch_exited": true,
+            "branch_exited_reason": "completed",
+            "modelRef": "master"
+          }
+        },
+        {
+          "modelRef": "exception-handling",
+          "rulesetContext": {
+            "dialog_stack": [
+              {
+                "dialog_node": "root"
+              }
+            ],
+            "dialog_turn_counter": 1,
+            "dialog_request_counter": 1,
+            "_node_output_map": {
+              "Swear": [
+                0
+              ],
+              "node_13_1529502360708": [
+                0
+              ],
+              "node_3_1529592193594": [
+                0
+              ]
+            },
+            "branch_exited": true,
+            "branch_exited_reason": "completed",
+            "modelRef": "exception-handling"
+          }
+        }
+      ],
+      "sysTurnCount": 1,
+      "userTurnCount": 1
+    },
+    "context": {
+      "conversationContext": {
+        "brand": "bos",
+        "channel": "mobile",
+        "failed_master": "y"
+      },
+      "userData": {
+        "tokens": []
+      }
+    },
+    "brand": "bos",
+    "channel": "mobile",
+    "configId": "divr",
+    "turnStart": "2018-09-26T16:29:07.404Z",
+    "question": {
+      "utterances": [
+        {
+          "text": "I don't know what i'm asking",
+          "entities": [],
+          "classifications": [
+            {
+              "modelRef": "master",
+              "intent": "Payments",
+              "confidence": 0.14687607779731024,
+              "type": "intent",
+              "name": "intent",
+              "value": "Payments"
+            },
+            {
+              "modelRef": "master",
+              "intent": "chitchat",
+              "confidence": 0.11925831768636501,
+              "type": "intent",
+              "name": "intent",
+              "value": "chitchat"
+            },
+            {
+              "modelRef": "master",
+              "intent": "Products",
+              "confidence": 0.09112636594663286,
+              "type": "intent",
+              "name": "intent",
+              "value": "Products"
+            },
+            {
+              "modelRef": "master",
+              "intent": "greeting",
+              "confidence": 0.09017618431144002,
+              "type": "intent",
+              "name": "intent",
+              "value": "greeting"
+            },
+            {
+              "modelRef": "master",
+              "intent": "Breakingnews",
+              "confidence": 0.08925753102043643,
+              "type": "intent",
+              "name": "intent",
+              "value": "Breakingnews"
+            },
+            {
+              "modelRef": "master",
+              "intent": "Personaldetails",
+              "confidence": 0.08889067899281144,
+              "type": "intent",
+              "name": "intent",
+              "value": "Personaldetails"
+            },
+            {
+              "modelRef": "master",
+              "intent": "Greyness",
+              "confidence": 0.08673639666964021,
+              "type": "intent",
+              "name": "intent",
+              "value": "Greyness"
+            },
+            {
+              "modelRef": "master",
+              "intent": "Fallback",
+              "confidence": 0.08315431343986752,
+              "type": "intent",
+              "name": "intent",
+              "value": "Fallback"
+            },
+            {
+              "modelRef": "master",
+              "intent": "Cards",
+              "confidence": 0.08253383523099682,
+              "type": "intent",
+              "name": "intent",
+              "value": "Cards"
+            },
+            {
+              "modelRef": "master",
+              "intent": "Travel",
+              "confidence": 0.08252380446659373,
+              "type": "intent",
+              "name": "intent",
+              "value": "Travel"
+            }
+          ]
+        }
+      ]
+    },
+    "reply": {
+      "utterances": [
+        {
+          "text": "I didn't understand that. Please describe it using different words, in a short sentence.",
+          "copyNames": [
+            "not_understood_1"
+          ]
+        }
+      ]
+    },
+    "path": {
+      "triggers": {}
+    },
+    "events": [
+      {
+        "type": "customDialogEvent",
+        "name": "ConEng-Anything_else",
+        "model": "master",
+        "nodeUid": "8d958b8f-8ce0-4e95-8d17-6361ec0313a3",
+        "nodeLname": "Anything else",
+        "nodeHead": "Anything else",
+        "address": "016"
+      },
+      {
+        "model": "master",
+        "nodeLname": "node_1_1516984585021",
+        "type": "nodeVisited",
+        "name": "traverse"
+      },
+      {
+        "model": "master",
+        "nodeLname": "Anything else",
+        "type": "nodeVisited",
+        "name": "traverse"
+      },
+      {
+        "type": "nodeVisited",
+        "name": "return",
+        "model": "master",
+        "nodeUid": "8d958b8f-8ce0-4e95-8d17-6361ec0313a3",
+        "nodeLname": "Anything else",
+        "nodeHead": "Anything else",
+        "address": "016"
+      }
+    ],
+    "turnEnd": "2018-09-26T16:29:08.728Z"
+  }}
